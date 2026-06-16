@@ -7,7 +7,13 @@ import time
 @st.dialog("Quick Enrollment")
 def auto_enroll_dialog(subject_code):
 
-    student_id = st.session_state.student_data["student_id"]
+    student_data = st.session_state.get("student_data")
+
+    if not student_data:
+        st.error("Student session not found. Please log in again.")
+        return
+
+    student_id = student_data["student_id"]
 
     res = (
         supabase.table("subjects")
@@ -44,7 +50,6 @@ def auto_enroll_dialog(subject_code):
 
         return
 
-    # ← KEEP THIS INSIDE THE FUNCTION
     st.markdown(
         f"Would you like to enroll in **{subject['name']}**?"
     )
